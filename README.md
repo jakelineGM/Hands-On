@@ -2,7 +2,7 @@
 
 # DevTITANS 06 - HandsOn Final - Equipe 04
 
-Bem-vindo ao repositório da Equipe 04 do HandsON de Final do DevTITANS! Este projeto contém [...]
+Bem-vindo ao repositório da Equipe 04 do HandsOn Final do DevTITANS! Este projeto contém [...]
 
 ## Tabela de Conteúdos
 
@@ -24,15 +24,15 @@ Bem-vindo ao repositório da Equipe 04 do HandsON de Final do DevTITANS! Este pr
 <img src="https://github.com/DevTITANS05/Hands-On-Linux-fork-/assets/21023906/85e61f3e-476c-47a4-82d5-4054e856c67b" width="180" >
 <img src="https://github.com/DevTITANS05/Hands-On-Linux-fork-/assets/21023906/85e61f3e-476c-47a4-82d5-4054e856c67b" width="180" >
 
-- **Nome do(a) Aluno(a) 01:** Desenvolvedor do Firmware e Mantenedor do Projeto
-- **Nome do(a) Aluno(a) 02:** Desenvolvedor do Firmware
-- **Nome do(a) Aluno(a) 03:** Desenvolvedor do Driver Linux
-- **Nome do(a) Aluno(a) 04:** Desenvolvedor do Driver Linux
-- **Nome do(a) Aluno(a) 05:** Desenvolvedor do Firmware e Escritor da Documentação
+- **Rafael Facioni Scalabrin:** Desenvolvedor do ...
+- **Pedro Lucas Bezerra Mendes:** Desenvolvedor do ...
+- **Wanderson Lima Ferreira:** Desenvolvedor do ...
+- **Jakeline Gimaque de Mesquita:** Desenvolvedor do ...
+- **Darlysson Melo de Lima:** Desenvolvedor do ...
 
 ## Introdução
 
-Este projeto serve como um exemplo para desenvolvedores interessados em construir e integrar soluções de hardware personalizadas com sistemas Linux. Inclui os seguintes componentes:
+Este projeto serve como um exemplo para desenvolvedores interessados em construir e integrar soluções de hardware personalizadas com sistemas Android. Inclui os seguintes componentes:
 - Firmware para o microcontrolador ESP32 para lidar com operações específicas do dispositivo.
 - Um driver do kernel Linux que se comunica com o dispositivo ESP32, permitindo troca de dados e controle.
 
