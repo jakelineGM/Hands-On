@@ -39,106 +39,20 @@ Este projeto serve como um exemplo para desenvolvedores interessados em construi
 
 ## Recursos
 
-- **Firmware:**
-  - Aquisição básica de dados de sensores.
-  - Comunicação via Serial com o driver Linux.
-  
-- **Driver:**
-  - Rotinas de inicialização e limpeza.
-  - Operações de arquivo de dispositivo (`GET_LED`, `SET_LED`, `GET_LDR`).
-  - Comunicação com o ESP32 via Serial.
-
 ## Requisitos
 
-- **Hardware:**
-  - Placa de Desenvolvimento ESP32
-  - Máquina Linux
-  - Protoboard e Cabos Jumper
-  - Sensor LDR
-  
-- **Software:**
-  - Arduino IDE
-  - Kernel Linux 4.0 ou superior
-  - GCC 4.8 ou superior
-  - Make 3.81 ou superior
-
 ## Configuração de Hardware
-
-1. **Conecte o ESP32 à sua Máquina Linux:**
-    - Use um cabo USB.
-    - Conecte os sensores ao ESP32 conforme especificado no firmware.
-
-2. **Garanta a alimentação e conexões adequadas:**
-    - Use um protoboard e cabos jumper para montar o circuito.
-    - Consulte o diagrama esquemático fornecido no diretório `esp32` para conexões detalhadas.
 
 ## Instalação
 
 ### Firmware ESP32
 
-1. **Abra o Arduino IDE e carregue o firmware:**
-    ```sh
-    Arquivo -> Abrir -> Selecione `smartlamp.ino`
-    ```
-
-2. **Configure a Placa e a Porta:**
-    ```sh
-    Ferramentas -> Placa -> Node32s
-    Ferramentas -> Porta -> Selecione a porta apropriada
-    ```
-
-3. **Carregue o Firmware:**
-    ```sh
-    Sketch -> Upload (Ctrl+U)
-    ```
-
 ### Driver Linux
-
-1. **Clone o Repositório:**
-    ```sh
-    git clone https://github.com/seuusuario/Hands-On-Linux.git
-    cd Hands-On-Linux
-    ```
-
-2. **Compile o Driver:**
-    ```sh
-    cd smartlamp-kernel-module
-    make
-    ```
-
-3. **Carregue o Driver:**
-    ```sh
-    sudo insmod smartlamp.ko
-    ```
-
-4. **Verifique o Driver:**
-    ```sh
-    dmesg | tail
-    ```
 
 ## Uso
 
 Depois que o driver e o firmware estiverem configurados, você poderá interagir com o dispositivo ESP32 através do sistema Linux.
 
-- **Escrever para o Dispositivo:**
-    ```sh
-    echo "GET_LED" > /sys/kernel/smartlamp/led
-    ```
-
-- **Ler do Dispositivo:**
-    ```sh
-    cat /sys/kernel/smartlamp/led
-    ```
-
-- **Verificar Mensagens do Driver:**
-    ```sh
-    dmesg | tail
-    ```
-
-- **Remover o Driver:**
-    ```sh
-    sudo rmmod smartlamp
-    ```
     
 ## Contato
 
