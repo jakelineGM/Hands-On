@@ -2,7 +2,7 @@
 
 # DevTITANS 06 - HandsOn Final - Equipe 04
 
-Bem-vindo ao repositório da Equipe 04 do HandsOn Final do DevTITANS! Este projeto contém [...]
+Bem-vindo ao repositório da Equipe 04 do HandsOn Final do DevTITANS! Este projeto visa a criação de um JoyStick com acelerometro que implemente o protocolo do SNES e um driver para o Android, assim como a instalação do sistema Android no Raspberry.
 
 ## Tabela de Conteúdos
 
@@ -35,14 +35,15 @@ Bem-vindo ao repositório da Equipe 04 do HandsOn Final do DevTITANS! Este proje
 Este projeto serve como um exemplo para desenvolvedores interessados em construir e integrar soluções de hardware personalizadas com sistemas Android. Inclui os seguintes componentes:
 - Firmware para o microcontrolador ESP32 para lidar com operações específicas do dispositivo.
 - Um driver do kernel Linux que se comunica com o dispositivo ESP32, permitindo troca de dados e controle.
+- Instalação do Android no Raspberry.
 
 ## Recursos
 
-- **Firmware ESP32:**
+- **Firmware:**
   - Aquisição básica de dados de sensores.
   - Comunicação via Serial com o driver Linux.
   
-- **Driver do Kernel Linux:**
+- **Driver:**
   - Rotinas de inicialização e limpeza.
   - Operações de arquivo de dispositivo (`GET_LED`, `SET_LED`, `GET_LDR`).
   - Comunicação com o ESP32 via Serial.
