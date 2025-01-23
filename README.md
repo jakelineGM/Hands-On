@@ -34,6 +34,21 @@ Este projeto serve como um exemplo para desenvolvedores interessados em construi
 
 ## Requisitos
 
+- **Hardware:**
+  - Placa de Desenvolvimento ESP32
+  - Máquina Linux
+  - Protoboard e Cabos Jumper
+  - Acelerômetro
+  - Botões
+  - Raspberry Pi 4
+  
+- **Software:**
+  - Arduino IDE
+  - Kernel Linux 4.0 ou superior
+  - GCC 4.8 ou superior
+  - Make 3.81 ou superior
+  - Raspberry Pi Imager 1.8.5 ou superior
+
 ## Configuração de Hardware
 
 ## Instalação
