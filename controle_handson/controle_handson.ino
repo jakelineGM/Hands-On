@@ -1,9 +1,9 @@
-// Autor: Pedro Mendes
+// Autores: Pedro Mendes e Jakeline
 
 // Array do controle
 // [ Baixo, Cima, Esquerda, Direita, X, Y, A, B, Start]
 
-volatile bool arrayControle[9] = {true, true, true, true, true, true, true, true, true};
+volatile int arrayControle[9] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
 
 //Botoes de Movimentacao
 int buttonBaixo = 19; // declara o button Baixo na porta 19
@@ -37,79 +37,23 @@ int readX = 0;
 int readY = 0;
 int readZ = 0;
 
+
+bool ver = false;
+
 // Funcao para o latch
 void IRAM_ATTR func_latch()
 {
-  countClock = 0;
-
-  arrayControle[0] = digitalRead(buttonBaixo);
-  readY = analogRead(acelY);
-  if(readY > 2000){
-    arrayControle[0] = false;
-  }
-  arrayControle[1] = digitalRead(buttonCima);
-  readY = analogRead(acelY);
-  if(readY < 1600){
-    arrayControle[1] = false;
-  }
-  arrayControle[2] = digitalRead(buttonEsq);
-  readX = analogRead(acelX);
-  if(readX < 1600){
-    arrayControle[2] = false;
-  }
-  arrayControle[3] = digitalRead(buttonDir);
-  readX = analogRead(acelX);
-  if(readX > 2000){
-    arrayControle[3] = false;
-  }
-  
-  
-  arrayControle[4] = digitalRead(buttonX);
-  arrayControle[5] = digitalRead(buttonY);
-  arrayControle[6] = digitalRead(buttonA);
-  arrayControle[7] = digitalRead(buttonB);
-  arrayControle[8] = digitalRead(buttonStart);
-  
+  ver = true;
 }
 
+
+bool ver_clock = false;
 // Funcao para o clock
 void IRAM_ATTR func_clock()
 {
-  if(digitalRead(pinClock)){
-    
-    // Array do controle
-    // [ Baixo, Cima, Esquerda, Direita, X, Y, A, B, Start]
-    
-    if(countClock==0){ // Baixo
-      digitalWrite(pinDados,arrayControle[0]);
-    }
-    if(countClock==1){ // Cima
-      digitalWrite(pinDados,arrayControle[1]);
-    }
-    if(countClock==2){ // Esquerda
-      digitalWrite(pinDados,arrayControle[2]);
-    }
-    if(countClock==3){ // Direita
-      digitalWrite(pinDados,arrayControle[3]);
-    }
-    if(countClock==4){ // X
-      digitalWrite(pinDados,arrayControle[4]);
-    }
-    if(countClock==5){ // Y
-      digitalWrite(pinDados,arrayControle[5]);
-    }
-    if(countClock==6){ // A
-      digitalWrite(pinDados,arrayControle[6]);
-    }
-    if(countClock==7){ // B
-      digitalWrite(pinDados,arrayControle[7]);
-    }
-    if(countClock==8){ // Start
-      digitalWrite(pinDados,arrayControle[8]);
-    }
-    
-    countClock++;
-  }
+
+  ver_clock = true;
+  
   
 }
 
@@ -137,40 +81,41 @@ void setup()
 
   pinMode(pinLatch, INPUT_PULLUP); // define o pino Latch como entrada
   pinMode(pinClock, INPUT_PULLUP); // define o pino Clock como entrada
+  pinMode(pinDados, OUTPUT); // define o pino data como saída
 
   attachInterrupt(pinLatch, func_latch, HIGH); //Funcao para interrupcao externa latch
   attachInterrupt(pinClock, func_clock, HIGH); //Funcao para interrupcao externa clock
   
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 void loop()
 {
-  if(digitalRead(buttonBaixo) == false){
+  if(digitalRead(buttonBaixo) == 0){
     Serial.println("Botao Baixo");
   }
-  if(digitalRead(buttonCima) == false){
+  if(digitalRead(buttonCima) == 0){
     Serial.println("Botao Cima");
   }
-  if(digitalRead(buttonEsq) == false){
+  if(digitalRead(buttonEsq) == 0){
     Serial.println("Botao Esq");
   }
-  if(digitalRead(buttonDir) == false){
+  if(digitalRead(buttonDir) == 0){
     Serial.println("Botao Dir");
   }
-  if(digitalRead(buttonX) == false){
+  if(digitalRead(buttonX) == 0){
     Serial.println("Botao X");
   }
-  if(digitalRead(buttonY) == false){
+  if(digitalRead(buttonY) == 0){
     Serial.println("Botao Y");
   }
-  if(digitalRead(buttonA) == false){
+  if(digitalRead(buttonA) == 0){
     Serial.println("Botao A");
   }
-  if(digitalRead(buttonB) == false){
+  if(digitalRead(buttonB) == 0){
     Serial.println("Botao B");
   }
-  if(digitalRead(buttonStart) == false){
+  if(digitalRead(buttonStart) == 0){
     Serial.println("Botao Start");
   }
   
@@ -189,5 +134,80 @@ void loop()
   readX = analogRead(acelX);
   if(readX > 2150){
     Serial.println("Acel. Dir");
+  }
+
+  if(ver == true){
+      
+    Serial.println("Latch");
+    countClock = 0;
+  
+    arrayControle[0] = digitalRead(buttonBaixo);
+    readY = analogRead(acelY);
+    if(readY > 2000){
+      arrayControle[0] = 0;
+    }
+    arrayControle[1] = digitalRead(buttonCima);
+    readY = analogRead(acelY);
+    if(readY < 1600){
+      arrayControle[1] = 0;
+    }
+    arrayControle[2] = digitalRead(buttonEsq);
+    readX = analogRead(acelX);
+    if(readX < 1600){
+      arrayControle[2] = 0;
+    }
+    arrayControle[3] = digitalRead(buttonDir);
+    readX = analogRead(acelX);
+    if(readX > 2000){
+      arrayControle[3] = 0;
+    }
+    
+    arrayControle[4] = digitalRead(buttonX);
+    arrayControle[5] = digitalRead(buttonY);
+    arrayControle[6] = digitalRead(buttonA);
+    arrayControle[7] = digitalRead(buttonB);
+    arrayControle[8] = digitalRead(buttonStart);
+    
+    ver = false;
+  }
+
+  if(ver_clock == true){
+    Serial.println("Clock");
+    if(digitalRead(pinClock)){
+      
+      // Array do controle
+      // [ Baixo, Cima, Esquerda, Direita, X, Y, A, B, Start]
+      
+      if(countClock==0){ // Baixo
+        digitalWrite(pinDados,arrayControle[0]);
+      }
+      if(countClock==1){ // Cima
+        digitalWrite(pinDados,arrayControle[1]);
+      }
+      if(countClock==2){ // Esquerda
+        digitalWrite(pinDados,arrayControle[2]);
+      }
+      if(countClock==3){ // Direita
+        digitalWrite(pinDados,arrayControle[3]);
+      }
+      if(countClock==4){ // X
+        digitalWrite(pinDados,arrayControle[4]);
+      }
+      if(countClock==5){ // Y
+        digitalWrite(pinDados,arrayControle[5]);
+      }
+      if(countClock==6){ // A
+        digitalWrite(pinDados,arrayControle[6]);
+      }
+      if(countClock==7){ // B
+        digitalWrite(pinDados,arrayControle[7]);
+      }
+      if(countClock==8){ // Start
+        digitalWrite(pinDados,arrayControle[8]);
+      }
+      
+      countClock++;
+    }
+    ver_clock = false;
   }
 }
