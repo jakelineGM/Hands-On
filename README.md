@@ -17,18 +17,11 @@ Bem-vindo ao repositório da Equipe 04 do HandsOn Final do DevTITANS! Este proje
 
 ## Contribuidores
 
-<img src="https://github.com/DevTITANS05/Hands-On-Linux-fork-/assets/21023906/85e61f3e-476c-47a4-82d5-4054e856c67b" width="180" >
-<img src="https://github.com/DevTITANS05/Hands-On-Linux-fork-/assets/21023906/85e61f3e-476c-47a4-82d5-4054e856c67b" width="180" >
-<img src="https://github.com/DevTITANS05/Hands-On-Linux-fork-/assets/21023906/85e61f3e-476c-47a4-82d5-4054e856c67b" width="180" >
-<img src="https://github.com/DevTITANS05/Hands-On-Linux-fork-/assets/21023906/85e61f3e-476c-47a4-82d5-4054e856c67b" width="180" >
-<img src="https://github.com/DevTITANS05/Hands-On-Linux-fork-/assets/21023906/85e61f3e-476c-47a4-82d5-4054e856c67b" width="180" >
-<img src="https://github.com/DevTITANS05/Hands-On-Linux-fork-/assets/21023906/85e61f3e-476c-47a4-82d5-4054e856c67b" width="180" >
-
-- **Rafael Facioni Scalabrin:** Desenvolvedor do ...
-- **Pedro Lucas Bezerra Mendes:** Desenvolvedor do ...
-- **Wanderson Lima Ferreira:** Desenvolvedor do ...
-- **Jakeline Gimaque de Mesquita:** Desenvolvedor do ...
-- **Darlysson Melo de Lima:** Desenvolvedor do ...
+- **Rafael Facioni Scalabrin:** Desenvolvedor do Driver
+- **Pedro Lucas Bezerra Mendes:** Desenvolvedor do Firmware
+- **Wanderson Lima Ferreira:** Desenvolvedor do Driver
+- **Jakeline Gimaque de Mesquita:** Desenvolvedor do Firmware
+- **Darlysson Melo de Lima:** Desenvolvedor do JoyStick
 
 ## Introdução
 
@@ -52,7 +45,6 @@ Este projeto serve como um exemplo para desenvolvedores interessados em construi
 ## Uso
 
 Depois que o driver e o firmware estiverem configurados, você poderá interagir com o dispositivo ESP32 através do sistema Linux.
-
     
 ## Contato
 
