@@ -21,9 +21,9 @@ int buttonB = 25; // declara o button B na porta 25
 int buttonStart = 21; // declara o button Pause na porta 21
 
 //Direcoes do Acelerometro
-int acelX = 32;
-int acelY = 35;
-int acelZ = 34;
+int acelX = 32; // declara o eixo x na porta 32
+int acelY = 35; // declara o eixo y na porta 35
+int acelZ = 34; // declara o eixo z na porta 34
 
 // Pinos de SNES
 volatile int pinDados = 12; // declara o pino de dados na porta 12
@@ -32,7 +32,7 @@ volatile int pinLatch = 13; // declara o pino de dados na porta 13
 
 volatile int countClock = 0; // Count do clock
 
-//variaveis de leitura acelerometro
+// Leitura analogica do acelerometro
 int readX = 0;
 int readY = 0;
 int readZ = 0;
@@ -120,18 +120,17 @@ void loop()
   }
   
   readY = analogRead(acelY);
+  readX = analogRead(acelX);
+  
   if(readY > 2150){
     Serial.println("Acel. Baixo");
   }
-  readY = analogRead(acelY);
   if(readY < 1450){
     Serial.println("Acel. Cima");
   }
-  readX = analogRead(acelX);
   if(readX < 1450){
     Serial.println("Acel. Esq");
   }
-  readX = analogRead(acelX);
   if(readX > 2150){
     Serial.println("Acel. Dir");
   }
@@ -140,24 +139,23 @@ void loop()
       
     Serial.println("Latch");
     countClock = 0;
+
+    readY = analogRead(acelY);
+    readX = analogRead(acelX);
   
     arrayControle[0] = digitalRead(buttonBaixo);
-    readY = analogRead(acelY);
     if(readY > 2000){
       arrayControle[0] = 0;
     }
     arrayControle[1] = digitalRead(buttonCima);
-    readY = analogRead(acelY);
     if(readY < 1600){
       arrayControle[1] = 0;
     }
     arrayControle[2] = digitalRead(buttonEsq);
-    readX = analogRead(acelX);
     if(readX < 1600){
       arrayControle[2] = 0;
     }
     arrayControle[3] = digitalRead(buttonDir);
-    readX = analogRead(acelX);
     if(readX > 2000){
       arrayControle[3] = 0;
     }
