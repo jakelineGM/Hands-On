@@ -5,207 +5,213 @@
 
 volatile int arrayControle[9] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
 
-//Botoes de Movimentacao
-int buttonBaixo = 19; // declara o button Baixo na porta 19
-int buttonCima = 4; // declara o button Cima na porta 4
-int buttonEsq = 5; // declara o button Esquerda na porta 5
-int buttonDir = 18; // declara o button Direita na porta 18
+// Botoes de Movimentacao
+int buttonBaixo = 19;  // Botão Baixo na porta 19
+int buttonCima = 4;    // Botão Cima na porta 4
+int buttonEsq = 5;     // Botão Esquerda na porta 5
+int buttonDir = 18;    // Botão Direita na porta 18
 
-//Botoes de acao
-int buttonX = 27; // declara o button X na porta 27
-int buttonY = 33; // declara o button Y na porta 33
-int buttonA = 26; // declara o button A na porta 26
-int buttonB = 25; // declara o button B na porta 25
+// Botoes de acao
+int buttonX = 27;      // Botão X na porta 27
+int buttonY = 33;      // Botão Y na porta 33
+int buttonA = 26;      // Botão A na porta 26
+int buttonB = 25;      // Botão B na porta 25
 
-//Botao de Pause
-int buttonStart = 21; // declara o button Pause na porta 21
+// Botao de Pause
+int buttonStart = 21;  // Botão Start na porta 21
 
-//Direcoes do Acelerometro
-int acelX = 32; // declara o eixo x na porta 32
-int acelY = 35; // declara o eixo y na porta 35
-int acelZ = 34; // declara o eixo z na porta 34
+// Direcoes do Acelerometro
+int acelX = 32;
+int acelY = 35;
+int acelZ = 34;
 
 // Pinos de SNES
-volatile int pinDados = 12; // declara o pino de dados na porta 12
-volatile int pinClock = 14; // declara o pino de clock na porta 14
-volatile int pinLatch = 13; // declara o pino de dados na porta 13
+int pinDados = 12;     // Pino de dados na porta 12
+int pinClock = 14;     // Pino de clock na porta 14
+int pinLatch = 13;     // Pino de latch na porta 13
 
-volatile int countClock = 0; // Count do clock
+volatile int countClock = 0;  // Contador de clock
 
-// Leitura analogica do acelerometro
+// Variáveis de leitura do acelerômetro
 int readX = 0;
 int readY = 0;
 int readZ = 0;
 
+volatile bool ver = false;
+volatile bool processandoClock = false; // Controle para evitar múltiplas leituras do clock
 
-bool ver = false;
-
-// Funcao para o latch
+// Função para o latch
 void IRAM_ATTR func_latch()
 {
-  ver = true;
+    ver = true;
 }
 
+// Função para o clock
+volatile bool ver_clock = false;
 
-bool ver_clock = false;
-// Funcao para o clock
 void IRAM_ATTR func_clock()
 {
-
   ver_clock = true;
-  
-  
 }
-
 
 void setup()
 {
-  //Setup botoes movimentacao
-  pinMode(buttonBaixo, INPUT_PULLUP); // define o pino do botao baixo como entrada
-  pinMode(buttonCima, INPUT_PULLUP); // define o pino do botao cima como entrada
-  pinMode(buttonEsq, INPUT_PULLUP); // define o pino do botao esquerda como entrada
-  pinMode(buttonDir, INPUT_PULLUP); // define o pino do botao direita como entrada
+  // Setup dos botões de movimentação
+  pinMode(buttonBaixo, INPUT_PULLUP);
+  pinMode(buttonCima, INPUT_PULLUP);
+  pinMode(buttonEsq, INPUT_PULLUP);
+  pinMode(buttonDir, INPUT_PULLUP);
 
-  //Setup botoes acao
-  pinMode(buttonX, INPUT_PULLUP); // define o pino do botao X como entrada
-  pinMode(buttonY, INPUT_PULLUP); // define o pino do botao Y como entrada
-  pinMode(buttonA, INPUT_PULLUP); // define o pino do botao A como entrada
-  pinMode(buttonB, INPUT_PULLUP); // define o pino do botao B como entrada
+  // Setup dos botões de ação
+  pinMode(buttonX, INPUT_PULLUP);
+  pinMode(buttonY, INPUT_PULLUP);
+  pinMode(buttonA, INPUT_PULLUP);
+  pinMode(buttonB, INPUT_PULLUP);
+  pinMode(buttonStart, INPUT_PULLUP);
 
-  pinMode(buttonStart, INPUT_PULLUP); // define o pino do botao Start como entrada
-
-  //Setup acelerometro
+  // Setup do acelerômetro
   pinMode(acelX, INPUT);
   pinMode(acelY, INPUT);
   pinMode(acelZ, INPUT);
 
-  pinMode(pinLatch, INPUT_PULLUP); // define o pino Latch como entrada
-  pinMode(pinClock, INPUT_PULLUP); // define o pino Clock como entrada
-  pinMode(pinDados, OUTPUT); // define o pino data como saída
+  // Setup dos pinos SNES
+  pinMode(pinLatch, INPUT_PULLUP);
+  pinMode(pinClock, INPUT_PULLUP);
+  pinMode(pinDados, OUTPUT);
 
-  attachInterrupt(pinLatch, func_latch, HIGH); //Funcao para interrupcao externa latch
-  attachInterrupt(pinClock, func_clock, HIGH); //Funcao para interrupcao externa clock
-  
+  attachInterrupt(pinLatch, func_latch, FALLING);  // Função para interrupção externa latch
+  attachInterrupt(pinClock, func_clock, FALLING);  // Função para interrupção externa clock
+
   Serial.begin(115200);
 }
 
+
+
 void loop()
 {
-  if(digitalRead(buttonBaixo) == 0){
-    Serial.println("Botao Baixo");
-  }
-  if(digitalRead(buttonCima) == 0){
-    Serial.println("Botao Cima");
-  }
-  if(digitalRead(buttonEsq) == 0){
-    Serial.println("Botao Esq");
-  }
-  if(digitalRead(buttonDir) == 0){
-    Serial.println("Botao Dir");
-  }
-  if(digitalRead(buttonX) == 0){
-    Serial.println("Botao X");
-  }
-  if(digitalRead(buttonY) == 0){
-    Serial.println("Botao Y");
-  }
-  if(digitalRead(buttonA) == 0){
-    Serial.println("Botao A");
-  }
-  if(digitalRead(buttonB) == 0){
-    Serial.println("Botao B");
-  }
-  if(digitalRead(buttonStart) == 0){
-    Serial.println("Botao Start");
-  }
-  
-  readY = analogRead(acelY);
-  readX = analogRead(acelX);
-  
-  if(readY > 2150){
-    Serial.println("Acel. Baixo");
-  }
-  if(readY < 1450){
-    Serial.println("Acel. Cima");
-  }
-  if(readX < 1450){
-    Serial.println("Acel. Esq");
-  }
-  if(readX > 2150){
-    Serial.println("Acel. Dir");
-  }
-
-  if(ver == true){
-      
+  // Processamento do controle SNES
+  if (ver == true)
+  {
     Serial.println("Latch");
     countClock = 0;
 
-    readY = analogRead(acelY);
-    readX = analogRead(acelX);
-  
+    // Leitura e verificação dos botões e acelerômetro
     arrayControle[0] = digitalRead(buttonBaixo);
-    if(readY > 2000){
+    readY = analogRead(acelY);
+    if (readY > 2000) {
       arrayControle[0] = 0;
+      Serial.println("Baixo");
     }
+
     arrayControle[1] = digitalRead(buttonCima);
-    if(readY < 1600){
+    readY = analogRead(acelY);
+    if (readY < 1600) {
       arrayControle[1] = 0;
+      Serial.println("Cima");
     }
+
     arrayControle[2] = digitalRead(buttonEsq);
-    if(readX < 1600){
+    readX = analogRead(acelX);
+    if (readX < 1600) {
       arrayControle[2] = 0;
+      Serial.println("Esquerda");
     }
+
     arrayControle[3] = digitalRead(buttonDir);
-    if(readX > 2000){
+    readX = analogRead(acelX);
+    if (readX > 2000) {
       arrayControle[3] = 0;
+      Serial.println("Direita");
     }
-    
+
+    // Leitura dos botões de ação
     arrayControle[4] = digitalRead(buttonX);
     arrayControle[5] = digitalRead(buttonY);
     arrayControle[6] = digitalRead(buttonA);
     arrayControle[7] = digitalRead(buttonB);
     arrayControle[8] = digitalRead(buttonStart);
-    
-    ver = false;
+
+    ver = false;  // Resetar o flag de verificação
   }
 
-  if(ver_clock == true){
+  // Processamento do clock do protocolo SNES
+  if (ver_clock == true)
+  {
     Serial.println("Clock");
-    if(digitalRead(pinClock)){
-      
-      // Array do controle
-      // [ Baixo, Cima, Esquerda, Direita, X, Y, A, B, Start]
-      
-      if(countClock==0){ // Baixo
-        digitalWrite(pinDados,arrayControle[0]);
-      }
-      if(countClock==1){ // Cima
-        digitalWrite(pinDados,arrayControle[1]);
-      }
-      if(countClock==2){ // Esquerda
-        digitalWrite(pinDados,arrayControle[2]);
-      }
-      if(countClock==3){ // Direita
-        digitalWrite(pinDados,arrayControle[3]);
-      }
-      if(countClock==4){ // X
-        digitalWrite(pinDados,arrayControle[4]);
-      }
-      if(countClock==5){ // Y
-        digitalWrite(pinDados,arrayControle[5]);
-      }
-      if(countClock==6){ // A
-        digitalWrite(pinDados,arrayControle[6]);
-      }
-      if(countClock==7){ // B
-        digitalWrite(pinDados,arrayControle[7]);
-      }
-      if(countClock==8){ // Start
-        digitalWrite(pinDados,arrayControle[8]);
-      }
-      
-      countClock++;
+
+    if(countClock < 9){
+      digitalWrite(pinDados, arrayControle[countClock]);
+      Serial.print(countClock);
+      Serial.print(" : ");
+      Serial.println(arrayControle[countClock]);
     }
+    
+    countClock++;
     ver_clock = false;
+
+    // Após enviar todos os dados, resetamos as variáveis
+    if (countClock >= 9)
+    {
+        digitalWrite(pinDados, arrayControle[8]);
+    }
+
+    /*
+
+    if (countClock == 0) { // Baixo
+        digitalWrite(pinDados, arrayControle[0]);
+        Serial.print("Baixo: ");
+        Serial.println(arrayControle[0]);
+    }
+    else if (countClock == 1) { // Cima
+        digitalWrite(pinDados, arrayControle[1]);
+        Serial.print("Cima: ");
+        Serial.println(arrayControle[1]);
+    }
+    else if (countClock == 2) { // Esquerda
+        digitalWrite(pinDados, arrayControle[2]);
+        Serial.print("Esquerda: ");
+        Serial.println(arrayControle[2]);
+    }
+    else if (countClock == 3) { // Direita
+        digitalWrite(pinDados, arrayControle[3]);
+        Serial.print("Direita: ");
+        Serial.println(arrayControle[3]);
+    }
+    else if (countClock == 4) { // X
+        digitalWrite(pinDados, arrayControle[4]);
+        Serial.print("X: ");
+        Serial.println(arrayControle[4]);
+    }
+    else if (countClock == 5) { // Y
+        digitalWrite(pinDados, arrayControle[5]);
+        Serial.print("Y: ");
+        Serial.println(arrayControle[5]);
+    }
+    else if (countClock == 6) { // A
+        digitalWrite(pinDados, arrayControle[6]);
+        Serial.print("A: ");
+        Serial.println(arrayControle[6]);
+    }
+    else if (countClock == 7) { // B
+        digitalWrite(pinDados, arrayControle[7]);
+        Serial.print("B: ");
+        Serial.println(arrayControle[7]);
+    }
+    else if (countClock == 8) { // Start
+        digitalWrite(pinDados, arrayControle[8]);
+        Serial.print("Start: ");
+        Serial.println(arrayControle[8]);
+    }
+    
+
+    countClock++;
+    ver_clock = false;
+
+    // Após enviar todos os dados, resetamos as variáveis
+    if (countClock >= 9)
+    {
+        processandoClock = false;  // Liberar a interrupção para a próxima leitura
+    }
+    */
   }
 }
