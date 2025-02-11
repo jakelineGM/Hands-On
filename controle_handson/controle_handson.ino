@@ -1,80 +1,77 @@
-// Autores: Pedro Mendes e Jakeline
+/*
+ * Autores: Pedro Mendes e Jakeline
+ * Firmaware para gamepad - Projeto desenvolvido no Hands-On final do DevTITANS
+ * 
+ */
 
-// Array do controle
-// [ Baixo, Cima, Esquerda, Direita, X, Y, A, B, Start]
+ /*Array do gamepad*/
+ /*[ X, A, 1, Start, Baixo, Cima, Esquerda, Direita, Y, B]*/
 
 volatile int arrayControle[9] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
 
-// Botoes de Movimentacao
-int buttonBaixo = 19;  // Botão Baixo na porta 19
-int buttonCima = 4;    // Botão Cima na porta 4
-int buttonEsq = 5;     // Botão Esquerda na porta 5
-int buttonDir = 18;    // Botão Direita na porta 18
+/*portas dos botoes de movimentacao*/
+int buttonBaixo = 19;
+int buttonCima = 4;
+int buttonEsq = 5;
+int buttonDir = 18
 
-// Botoes de acao
-int buttonX = 27;      // Botão X na porta 27
-int buttonY = 33;      // Botão Y na porta 33
-int buttonA = 26;      // Botão A na porta 26
-int buttonB = 25;      // Botão B na porta 25
-
-// Botao de Pause
-int buttonStart = 21;  // Botão Start na porta 21
-
-// Direcoes do Acelerometro
+/*portas do acelerometro*/
 int acelX = 32;
 int acelY = 35;
 int acelZ = 34;
 
-// Pinos de SNES
-int pinDados = 12;     // Pino de dados na porta 12
-int pinClock = 14;     // Pino de clock na porta 14
-int pinLatch = 13;     // Pino de latch na porta 13
+/*portas dos botoes de acao*/
+int buttonX = 27;
+int buttonY = 33;
+int buttonA = 26;
+int buttonB = 25;
 
-volatile int countClock = 0;  // Contador de clock
+/*portas de outros botoes*/
+//int buttonSelect = ?;
+int buttonStart = 21;
 
-// Variáveis de leitura do acelerômetro
+/*portas SNES*/
+int pinDados = 12;
+int pinClock = 14;
+int pinLatch = 13;
+
+/*variáveis de leitura do acelerômetro*/
 int readX = 0;
 int readY = 0;
 int readZ = 0;
 
-volatile bool ver = false;
+volatile int countClock = 0;
 volatile bool processandoClock = false; // Controle para evitar múltiplas leituras do clock
 
-// Função para o latch
-void IRAM_ATTR func_latch()
-{
-    ver = true;
-}
-
-// Função para o clock
+volatile bool ver = false;
 volatile bool ver_clock = false;
 
-void IRAM_ATTR func_clock()
-{
-  ver_clock = true;
-}
+/*funções de interrupção externa*/
+void IRAM_ATTR func_latch(){ver = true;}
+void IRAM_ATTR func_clock(){ver_clock = true;}
 
 void setup()
 {
-  // Setup dos botões de movimentação
+  /*Setup dos botões de movimentação*/
   pinMode(buttonBaixo, INPUT_PULLUP);
   pinMode(buttonCima, INPUT_PULLUP);
   pinMode(buttonEsq, INPUT_PULLUP);
   pinMode(buttonDir, INPUT_PULLUP);
 
-  // Setup dos botões de ação
+  /*Setup dos botões de ação*/
   pinMode(buttonX, INPUT_PULLUP);
   pinMode(buttonY, INPUT_PULLUP);
   pinMode(buttonA, INPUT_PULLUP);
   pinMode(buttonB, INPUT_PULLUP);
   pinMode(buttonStart, INPUT_PULLUP);
+  //pinMode(buttonSelect, INPUT_PULLUP);
 
-  // Setup do acelerômetro
+  /*Setup do acelerômetro*/
   pinMode(acelX, INPUT);
   pinMode(acelY, INPUT);
   pinMode(acelZ, INPUT);
 
-  // Setup dos pinos SNES
+  /*Setup do SNES*/
   pinMode(pinLatch, INPUT_PULLUP);
   pinMode(pinClock, INPUT_PULLUP);
   pinMode(pinDados, OUTPUT);
@@ -89,54 +86,56 @@ void setup()
 
 void loop()
 {
-  // Processamento do controle SNES
-  if (ver == true)
-  {
+  /*Processamento do controle SNES*/
+  /*************LATCH*************/
+  if (ver == true){
+    
     Serial.println("Latch");
     countClock = 0;
 
-    // Leitura e verificação dos botões e acelerômetro
-    arrayControle[0] = digitalRead(buttonBaixo);
     readY = analogRead(acelY);
+    readX = analogRead(acelX);
+
+    /*Leitura e verificação dos botões de movimentação e acelerômetro*/
+    arrayControle[4] = digitalRead(buttonBaixo);
     if (readY > 2000) {
-      arrayControle[0] = 0;
+      arrayControle[4] = 0;
       Serial.println("Baixo");
     }
 
-    arrayControle[1] = digitalRead(buttonCima);
-    readY = analogRead(acelY);
+    arrayControle[5] = digitalRead(buttonCima);
     if (readY < 1600) {
-      arrayControle[1] = 0;
+      arrayControle[5] = 0;
       Serial.println("Cima");
     }
 
-    arrayControle[2] = digitalRead(buttonEsq);
-    readX = analogRead(acelX);
+    arrayControle[6] = digitalRead(buttonEsq);
     if (readX < 1600) {
-      arrayControle[2] = 0;
+      arrayControle[6] = 0;
       Serial.println("Esquerda");
     }
 
-    arrayControle[3] = digitalRead(buttonDir);
-    readX = analogRead(acelX);
+    arrayControle[7] = digitalRead(buttonDir);
     if (readX > 2000) {
-      arrayControle[3] = 0;
+      arrayControle[7] = 0;
       Serial.println("Direita");
     }
 
-    // Leitura dos botões de ação
-    arrayControle[4] = digitalRead(buttonX);
-    arrayControle[5] = digitalRead(buttonY);
-    arrayControle[6] = digitalRead(buttonA);
-    arrayControle[7] = digitalRead(buttonB);
-    arrayControle[8] = digitalRead(buttonStart);
+    /*Leitura dos botões de ação*/
+    arrayControle[0] = digitalRead(buttonX);
+    arrayControle[8] = digitalRead(buttonY);
+    arrayControle[1] = digitalRead(buttonA);
+    arrayControle[9] = digitalRead(buttonB);
+    arrayControle[3] = digitalRead(buttonStart);
+    //arrayControle[2] = digitalRead(buttonSelect);
 
-    ver = false;  // Resetar o flag de verificação
+    /*resetar o flag de verificação*/
+    ver = false;  
   }
 
-  // Processamento do clock do protocolo SNES
-  if (ver_clock == true)
-  {
+  //*************CLOCK*************/
+  if (ver_clock == true){
+    
     Serial.println("Clock");
 
     if(countClock < 9){
@@ -145,16 +144,15 @@ void loop()
       Serial.print(" : ");
       Serial.println(arrayControle[countClock]);
     }
-    
+
     countClock++;
     ver_clock = false;
 
-    // Após enviar todos os dados, resetamos as variáveis
-    if (countClock >= 9)
-    {
-        digitalWrite(pinDados, arrayControle[8]);
-    }
-
+    /*Após enviar todos os dados, resetamos as variáveis*/
+    if (countClock >= 9){
+      digitalWrite(pinDados, arrayControle[8]);
+      }
+    
     /*
 
     if (countClock == 0) { // Baixo
@@ -202,7 +200,7 @@ void loop()
         Serial.print("Start: ");
         Serial.println(arrayControle[8]);
     }
-    
+
 
     countClock++;
     ver_clock = false;
