@@ -20,7 +20,7 @@ const int buttonY = 33;
 const int buttonA = 26;
 const int buttonB = 25;
 
-/*portas dos de outros botoes*/
+/*portas de outros botoes*/
 //const int buttonSelect = ?;
 const int buttonStart = 21;
 
@@ -59,11 +59,11 @@ volatile int StateButtonStart = 1;
 
 /*Array DATA*/
 //static int arrayData[10] = {StateButtonDown, StateButtonUp, StateButtonLeft, StateButtonRight, StateButtonX, StateButtonY, StateButtonA, StateButtonB, StateButtonStart, StateButtonSelect};
-static int arrayData[9] = {StateButtonDown, StateButtonUp, StateButtonLeft, StateButtonRight, StateButtonX, StateButtonY, StateButtonA, StateButtonB, StateButtonStart};
+volatile static int arrayData[9] = {StateButtonDown, StateButtonUp, StateButtonLeft, StateButtonRight, StateButtonX, StateButtonY, StateButtonA, StateButtonB, StateButtonStart};
 
 volatile int countClock = 0;
-volatile bool callLatch = false;
-volatile bool callClock = false;
+volatile bool callLatch = true;
+volatile bool callClock = true;
 
 /*funções de interrupção externa
  *No momento que há mudança do sinal de alto para baixo o processamento do sinal correspondente ocorre.
@@ -72,6 +72,9 @@ void IRAM_ATTR func_latch(){callLatch = true;}//Serial.println("LATCH");}
 void IRAM_ATTR func_clock(){callClock = true;}//Serial.println("CLOCK");}
 
 void setup(){
+
+  Serial.begin(115200);
+  Serial.println("Iniciando firmware...");
   
   /*setup dos botões de movimentação*/
   pinMode(buttonDown, INPUT_PULLUP);
@@ -79,7 +82,7 @@ void setup(){
   pinMode(buttonLeft, INPUT_PULLUP);
   pinMode(buttonRight, INPUT_PULLUP);
   
-  /*Setup do acelerômetro*/
+  /*setup do acelerômetro*/
   pinMode(acelX, INPUT);
   pinMode(acelY, INPUT);
   pinMode(acelZ, INPUT);
@@ -102,14 +105,15 @@ void setup(){
   /*setup das funções de interrupção externa*/
   attachInterrupt(pinLatch, func_latch, HIGH);
   attachInterrupt(pinClock, func_clock, HIGH);
-
-  Serial.begin(115200);
+  
+  Serial.print("Estado inicial buttonDown: "); Serial.println(digitalRead(buttonDown));
 }
 
 void loop(){
   /*processamento do protocolo SNES*/
   /********* LATCH *********/
-  if (callLatch == true){
+  /*
+    if (callLatch == true){
     //Serial.println("LATCH");
     countClock = 0;
 
@@ -134,24 +138,130 @@ void loop(){
     StateButtonB = digitalRead(buttonB);
     StateButtonStart = digitalRead(buttonStart);
     //StateButtonSelect = digitalRead(buttonSelect);
+    */
+
+    if (callLatch == true){
+    //Serial.println("LATCH");
+    countClock = 0;
+
+    readY = analogRead(acelY);
+    readX = analogRead(acelX);
+    
+    StateButtonDown = digitalRead(buttonDown);
+    /*teste de botao
+    if (StateButtonDown == 0){
+      Serial.println("buttondown");
+    }*/
+    if (readY > 2000){StateButtonDown = 0;}
+
+    StateButtonUp = digitalRead(buttonUp);
+    if (readY < 1600){StateButtonUp = 0;}
+
+    StateButtonLeft = digitalRead(buttonLeft);
+    if (readX < 1600) {StateButtonLeft = 0;}
+
+    StateButtonRight = digitalRead(buttonRight);
+    if (readX > 2000) {StateButtonRight = 0;}
+
+    StateButtonX = digitalRead(buttonX);
+    StateButtonY = digitalRead(buttonY);
+    StateButtonA = digitalRead(buttonA);
+    StateButtonB = digitalRead(buttonB);
+    StateButtonStart = digitalRead(buttonStart);
+    //StateButtonSelect = digitalRead(buttonSelect);
+
+    /*atualizacao do array com valoes atuais*/
+    arrayData[0] = StateButtonDown;
+    arrayData[1] = StateButtonUp;
+    arrayData[2] = StateButtonLeft;
+    arrayData[3] = StateButtonRight;
+    arrayData[4] = StateButtonX;
+    arrayData[5] = StateButtonY;
+    arrayData[6] = StateButtonA;
+    arrayData[7] = StateButtonB;
+    arrayData[8] = StateButtonStart;
+    delay(1000);
 
     /*reseta o flag de verificação*/
-    callLatch = false; 
+    //callLatch = false; 
   }
 
   /********* CLOCK *********/
   if (callClock == true){
     //Serial.println("CLOCK");
 
+    /*//teste do array
     Serial.print("<");
-
-    if (countClock < 9) {
-      digitalWrite(pinData, arrayData[countClock]);
-      Serial.print(arrayData[countClock]);
-      Serial.print(" ");
-    }
+    Serial.print(arrayData[0]);
+    Serial.print(" ");
+    Serial.print(arrayData[1]);
+    Serial.print(" ");
+    Serial.print(arrayData[2]);
+    Serial.print(" ");
+    Serial.print(arrayData[3]);
+    Serial.print(" ");
+    Serial.print(arrayData[4]);
+    Serial.print(" ");
+    Serial.print(arrayData[5]);
+    Serial.print(" ");
+    Serial.print(arrayData[6]);
+    Serial.print(" ");
+    Serial.print(arrayData[7]);
+    Serial.print(" ");
+    Serial.print(arrayData[8]);
+    Serial.print(" ");
     Serial.print(">");
     Serial.println();
+    delay(1000);*/
+
+    Serial.println("{b c e d X Y A B S}");
+    
+    if (countClock == 0) {
+        digitalWrite(pinData, arrayData[0]);
+        Serial.print("<");
+        Serial.print(arrayData[0]);
+        Serial.print(" ");
+    }
+    else if (countClock == 1) {
+        digitalWrite(pinData, arrayData[1]);
+        Serial.print(arrayData[1]);
+        Serial.print(" ");
+    }
+    else if (countClock == 2) {
+        digitalWrite(pinData, arrayData[2]);
+        Serial.print(arrayData[2]);
+        Serial.print(" ");
+    }
+    else if (countClock == 3) {
+        digitalWrite(pinData, arrayData[3]);
+        Serial.print(arrayData[3]);
+        Serial.print(" ");
+    }
+    else if (countClock == 4) {
+        digitalWrite(pinData, arrayData[4]);
+        Serial.print(arrayData[4]);
+        Serial.print(" ");
+    }
+    else if (countClock == 5) {
+        digitalWrite(pinData, arrayData[5]);
+        Serial.print(arrayData[5]);
+        Serial.print(" ");
+    }
+    else if (countClock == 6) {
+        digitalWrite(pinData, arrayData[6]);
+        Serial.print(arrayData[6]);
+        Serial.print(" ");
+    }
+    else if (countClock == 7) {
+        digitalWrite(pinData, arrayData[7]);
+        Serial.print(arrayData[7]);
+        Serial.print(" ");
+    }
+    else if (countClock == 8) {
+        digitalWrite(pinData, arrayData[8]);
+        Serial.print(arrayData[8]);
+        Serial.print(" ");
+    }
     countClock++;
     callClock = false;
   }
