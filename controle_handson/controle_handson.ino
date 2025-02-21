@@ -7,13 +7,13 @@
  /*Array do gamepad*/
  /*[ X, A, 1, Start, Baixo, Cima, Esquerda, Direita, Y, B]*/
 
-volatile int arrayControle[9] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
+volatile int arrayControle[10] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
 /*portas dos botoes de movimentacao*/
 int buttonBaixo = 19;
 int buttonCima = 4;
 int buttonEsq = 5;
-int buttonDir = 18
+int buttonDir = 18;
 
 /*portas do acelerometro*/
 int acelX = 32;
@@ -31,24 +31,23 @@ int buttonB = 25;
 int buttonStart = 21;
 
 /*portas SNES*/
-int pinDados = 12;
-int pinClock = 14;
-int pinLatch = 13;
+int pinDados = 13;
+int pinClock = 12;
+int pinLatch = 14;
 
 /*variáveis de leitura do acelerômetro*/
 int readX = 0;
 int readY = 0;
 int readZ = 0;
 
-volatile int countClock = 0;
+int countClock = 0;
 volatile bool processandoClock = false; // Controle para evitar múltiplas leituras do clock
 
 volatile bool ver = false;
 volatile bool ver_clock = false;
 
-/*funções de interrupção externa*/
-void IRAM_ATTR func_latch(){ver = true;}
-void IRAM_ATTR func_clock(){ver_clock = true;}
+int clocked = 0;
+int latched = 0;
 
 void setup()
 {
@@ -76,8 +75,8 @@ void setup()
   pinMode(pinClock, INPUT_PULLUP);
   pinMode(pinDados, OUTPUT);
 
-  attachInterrupt(pinLatch, func_latch, FALLING);  // Função para interrupção externa latch
-  attachInterrupt(pinClock, func_clock, FALLING);  // Função para interrupção externa clock
+//  attachInterrupt(pinLatch, func_latch, HIGH);  // Função para interrupção externa latch
+//  attachInterrupt(pinClock, func_clock, HIGH);  // Função para interrupção externa clock
 
   Serial.begin(115200);
 }
@@ -86,40 +85,47 @@ void setup()
 
 void loop()
 {
+  ver = digitalRead(pinLatch);
+  ver_clock = digitalRead(pinClock);
+
+   /*[ X, A, 1, Start, Baixo, Cima, Esquerda, Direita, Y, B]*/
+
   /*Processamento do controle SNES*/
   /*************LATCH*************/
-  if (ver == true){
+  if (ver == 1 && !latched){
     
-    Serial.println("Latch");
+//    Serial.println("Latch");
     countClock = 0;
-
-    readY = analogRead(acelY);
-    readX = analogRead(acelX);
+    
+    //readY = analogRead(acelY);
+    //readX = analogRead(acelX);
 
     /*Leitura e verificação dos botões de movimentação e acelerômetro*/
+    
     arrayControle[4] = digitalRead(buttonBaixo);
-    if (readY > 2000) {
-      arrayControle[4] = 0;
-      Serial.println("Baixo");
-    }
+//    if (readY > 2000) {
+//      arrayControle[4] = 0;
+//      //Serial.println("Baixo");
+//    }
 
     arrayControle[5] = digitalRead(buttonCima);
-    if (readY < 1600) {
-      arrayControle[5] = 0;
-      Serial.println("Cima");
-    }
+//    if (readY < 1600) {
+//      arrayControle[5] = 0;
+//      //Serial.println("Cima");
+//    }
 
     arrayControle[6] = digitalRead(buttonEsq);
-    if (readX < 1600) {
-      arrayControle[6] = 0;
-      Serial.println("Esquerda");
-    }
+//    if (readX < 1600) {
+//      arrayControle[6] = 0;
+//      //Serial.println("Esquerda");
+//    }
 
     arrayControle[7] = digitalRead(buttonDir);
-    if (readX > 2000) {
-      arrayControle[7] = 0;
-      Serial.println("Direita");
-    }
+//    if (readX > 2000) {
+//      arrayControle[7] = 0;
+//      //Serial.println("Direita");
+//    }
+    
 
     /*Leitura dos botões de ação*/
     arrayControle[0] = digitalRead(buttonX);
@@ -129,87 +135,28 @@ void loop()
     arrayControle[3] = digitalRead(buttonStart);
     //arrayControle[2] = digitalRead(buttonSelect);
 
-    /*resetar o flag de verificação*/
-    ver = false;  
+    /*resetar o flag de verificação*/ 
+    latched = 1; 
+  }
+
+  if(ver == 0){
+    latched = 0;
   }
 
   //*************CLOCK*************/
-  if (ver_clock == true){
+  if (ver_clock == 1 && !clocked){
     
-    Serial.println("Clock");
-
+    //Serial.println("Clock");
+    
+    digitalWrite(pinDados, arrayControle[countClock]);
+    
     if(countClock < 9){
-      digitalWrite(pinDados, arrayControle[countClock]);
-      Serial.print(countClock);
-      Serial.print(" : ");
-      Serial.println(arrayControle[countClock]);
+      countClock++;
     }
+    clocked = 1;
+  }
 
-    countClock++;
-    ver_clock = false;
-
-    /*Após enviar todos os dados, resetamos as variáveis*/
-    if (countClock >= 9){
-      digitalWrite(pinDados, arrayControle[8]);
-      }
-    
-    /*
-
-    if (countClock == 0) { // Baixo
-        digitalWrite(pinDados, arrayControle[0]);
-        Serial.print("Baixo: ");
-        Serial.println(arrayControle[0]);
-    }
-    else if (countClock == 1) { // Cima
-        digitalWrite(pinDados, arrayControle[1]);
-        Serial.print("Cima: ");
-        Serial.println(arrayControle[1]);
-    }
-    else if (countClock == 2) { // Esquerda
-        digitalWrite(pinDados, arrayControle[2]);
-        Serial.print("Esquerda: ");
-        Serial.println(arrayControle[2]);
-    }
-    else if (countClock == 3) { // Direita
-        digitalWrite(pinDados, arrayControle[3]);
-        Serial.print("Direita: ");
-        Serial.println(arrayControle[3]);
-    }
-    else if (countClock == 4) { // X
-        digitalWrite(pinDados, arrayControle[4]);
-        Serial.print("X: ");
-        Serial.println(arrayControle[4]);
-    }
-    else if (countClock == 5) { // Y
-        digitalWrite(pinDados, arrayControle[5]);
-        Serial.print("Y: ");
-        Serial.println(arrayControle[5]);
-    }
-    else if (countClock == 6) { // A
-        digitalWrite(pinDados, arrayControle[6]);
-        Serial.print("A: ");
-        Serial.println(arrayControle[6]);
-    }
-    else if (countClock == 7) { // B
-        digitalWrite(pinDados, arrayControle[7]);
-        Serial.print("B: ");
-        Serial.println(arrayControle[7]);
-    }
-    else if (countClock == 8) { // Start
-        digitalWrite(pinDados, arrayControle[8]);
-        Serial.print("Start: ");
-        Serial.println(arrayControle[8]);
-    }
-
-
-    countClock++;
-    ver_clock = false;
-
-    // Após enviar todos os dados, resetamos as variáveis
-    if (countClock >= 9)
-    {
-        processandoClock = false;  // Liberar a interrupção para a próxima leitura
-    }
-    */
+  if(ver_clock == 0){
+    clocked = 0;
   }
 }
